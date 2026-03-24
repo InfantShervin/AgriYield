@@ -267,6 +267,6 @@ This project is licensed under the MIT License.
 
 <div align="center">
 
-Made with 🌾 by Pauline Freeda · Powered by BesselK Kernel + Stacking Ensemble
+Made with 🌾 by Infant Shervin M J · Powered by BesselK Kernel + Stacking Ensemble
 
 </div>
