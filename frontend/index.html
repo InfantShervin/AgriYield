@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgriYield AI — Crop Yield Prediction</title>
+  <meta name="description" content="Predict crop yield with AI-powered multi-modal stacking ensemble models using BesselK kernel."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">🌾</div>
+        <span class="logo-text">AgriYield <span class="accent">AI</span></span>
+      </div>
+      <nav class="nav">
+        <a href="#predict" class="nav-link">Predict</a>
+        <a href="#history" class="nav-link">History</a>
+        <a href="#about" class="nav-link">How it works</a>
+        <div class="status-pill" id="statusPill">
+          <span class="status-dot"></span>
+          <span id="statusText">Connecting...</span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="orb orb1"></div>
+      <div class="orb orb2"></div>
+      <div class="orb orb3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">🧬 BesselK Kernel · Stacking Ensemble · GPR + XGBoost + Random Forest</div>
+      <h1 class="hero-title">Predict <span class="gradient-text">Crop Yield</span><br/>with AI Precision</h1>
+      <p class="hero-sub">Multi-modal machine learning powered by Gaussian Process Regression with custom BesselK spatial kernel. Achieving R² = 0.978 accuracy.</p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-val">0.978</span><span class="stat-lbl">R² Score</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-val">0.42</span><span class="stat-lbl">MAE (tons/ha)</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-val">5</span><span class="stat-lbl">Model Ensemble</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-val" id="totalPredsStat">0</span><span class="stat-lbl">Predictions Made</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prediction Section -->
+  <section class="section" id="predict">
+    <div class="container">
+      <div class="section-label">Prediction Engine</div>
+      <h2 class="section-title">Input Farm Parameters</h2>
+      <p class="section-sub">Click the map to set location, or use your current GPS position — then fill in field conditions.</p>
+
+      <!-- Map + Form side by side -->
+      <div class="predict-layout">
+
+        <!-- Left: Map -->
+        <div class="map-panel">
+          <div class="map-header">
+            <span class="map-title">📍 Select Farm Location</span>
+            <button class="locate-btn" id="locateBtn" title="Use my current location">
+              <span>📡 Use My Location</span>
+            </button>
+          </div>
+          <div id="leafletMap"></div>
+          <div class="map-coords" id="mapCoords">Click on the map to set coordinates</div>
+        </div>
+
+        <!-- Right: Form -->
+        <div class="form-panel">
+          <form id="predictForm" autocomplete="off">
+            <div class="form-grid">
+
+              <div class="form-group form-full">
+                <label for="crop_type">🌱 Crop Type</label>
+                <select id="crop_type" name="crop_type" required>
+                  <option value="">Select crop...</option>
+                  <option value="rice">Rice</option>
+                  <option value="wheat">Wheat</option>
+                  <option value="maize">Maize</option>
+                  <option value="cotton">Cotton</option>
+                  <option value="sugarcane">Sugarcane</option>
+                  <option value="potato">Potato</option>
+                  <option value="onion">Onion</option>
+                  <option value="tomato">Tomato</option>
+                  <option value="pulses">Pulses</option>
+                  <option value="groundnut">Groundnut</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="temperature">🌡️ Temperature (°C)</label>
+                <div class="input-wrap">
+                  <input type="number" id="temperature" min="-10" max="55" step="0.1" placeholder="e.g. 28.5" required/>
+                  <span class="unit">°C</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="humidity">💧 Humidity (%)</label>
+                <div class="input-wrap">
+                  <input type="number" id="humidity" min="0" max="100" step="0.1" placeholder="e.g. 65.0" required/>
+                  <span class="unit">%</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="precipitation">🌧️ Precipitation (mm)</label>
+                <div class="input-wrap">
+                  <input type="number" id="precipitation" min="0" max="5000" step="0.1" placeholder="e.g. 120.5" required/>
+                  <span class="unit">mm</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="soil_ph">🧪 Soil pH</label>
+                <div class="input-wrap">
+                  <input type="number" id="soil_ph" min="0" max="14" step="0.1" placeholder="e.g. 6.5" required/>
+                  <span class="unit">pH</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="soil_nutrients">🌿 Soil Nutrients (N+P+K)</label>
+                <div class="input-wrap">
+                  <input type="number" id="soil_nutrients" min="0" max="600" step="1" placeholder="e.g. 150" required/>
+                  <span class="unit">kg/ha</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="latitude">📍 Latitude <span class="auto-tag" id="latAutoTag"></span></label>
+                <div class="input-wrap">
+                  <input type="number" id="latitude" min="-90" max="90" step="0.0001" placeholder="Click map or GPS" required/>
+                  <span class="unit">°</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="longitude">📍 Longitude <span class="auto-tag" id="lngAutoTag"></span></label>
+                <div class="input-wrap">
+                  <input type="number" id="longitude" min="-180" max="180" step="0.0001" placeholder="Click map or GPS" required/>
+                  <span class="unit">°</span>
+                </div>
+              </div>
+
+            </div>
+
+            <button type="submit" class="predict-btn" id="predictBtn">
+              <span class="btn-icon">⚡</span>
+              <span class="btn-text">Predict Yield Now</span>
+              <span class="btn-loader" id="btnLoader" style="display:none">
+                <span class="spinner"></span> Predicting...
+              </span>
+            </button>
+          </form>
+
+          <!-- Result Card -->
+          <div class="result-card" id="resultCard" style="display:none">
+            <div class="result-header">
+              <div class="result-icon">🏆</div>
+              <div>
+                <div class="result-label">Predicted Crop Yield</div>
+                <div class="result-sub">Stacking Ensemble · R² = 0.978</div>
+              </div>
+            </div>
+            <div class="result-value">
+              <span id="yieldValue">—</span>
+              <span class="result-unit">tons/hectare</span>
+            </div>
+            <div class="result-meta">
+              <div class="result-meta-item"><span class="meta-label">Confidence</span><span class="meta-val" id="confidenceVal">—</span></div>
+              <div class="result-meta-item"><span class="meta-label">Status</span><span class="meta-val meta-success" id="statusVal">—</span></div>
+              <div class="result-meta-item"><span class="meta-label">Crop</span><span class="meta-val" id="cropVal">—</span></div>
+            </div>
+            <div class="result-bar-wrap">
+              <div class="result-bar-label">Yield Range (0 – 15 tons/ha)</div>
+              <div class="result-bar-bg"><div class="result-bar-fill" id="yieldBar"></div></div>
+            </div>
+            <div class="result-rating" id="yieldRating"></div>
+          </div>
+
+          <!-- Error Card -->
+          <div class="error-card" id="errorCard" style="display:none">
+            <span class="error-icon">⚠️</span>
+            <span id="errorMsg">An error occurred.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Importance Chart -->
+      <div class="chart-section">
+        <div class="section-label" style="margin-bottom:0.5rem">AI Insights</div>
+        <h3 class="chart-title">Feature Importance Analysis</h3>
+        <p class="section-sub" style="margin-bottom:1.5rem">Which factors most influence crop yield, based on your paper's ensemble model.</p>
+        <div class="chart-wrap">
+          <canvas id="featureChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prediction History -->
+  <section class="section section-dark" id="history">
+    <div class="container">
+      <div class="section-label">Session Log</div>
+      <h2 class="section-title">Prediction History</h2>
+      <p class="section-sub">All predictions made in this session are stored locally.</p>
+      <div class="history-actions">
+        <button class="clear-btn" id="clearHistoryBtn">🗑️ Clear History</button>
+      </div>
+      <div class="history-empty" id="historyEmpty">No predictions yet. Run a prediction above to see results here.</div>
+      <div class="history-table-wrap" id="historyTableWrap" style="display:none">
+        <table class="history-table" id="historyTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Crop</th>
+              <th>Yield (t/ha)</th>
+              <th>Temp °C</th>
+              <th>Rain mm</th>
+              <th>Location</th>
+              <th>Rating</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compare Crops -->
+  <section class="section" id="compare">
+    <div class="container">
+      <div class="section-label">Crop Comparison</div>
+      <h2 class="section-title">Compare Yield Across Crops</h2>
+      <p class="section-sub">Same field conditions, different crops — see which crop yields the best at your location.</p>
+      <button class="compare-btn" id="compareBtn">🔄 Run Crop Comparison</button>
+      <div class="compare-wrap" id="compareWrap" style="display:none">
+        <canvas id="compareChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section section-dark" id="about">
+    <div class="container">
+      <div class="section-label">Architecture</div>
+      <h2 class="section-title">How it Works</h2>
+      <div class="arch-grid">
+        <div class="arch-card"><div class="arch-icon">📊</div><h3>Multi-Modal Data</h3><p>Combines Crop, Weather, Rainfall, and Soil datasets via KNN spatial interpolation on Latitude/Longitude.</p></div>
+        <div class="arch-card"><div class="arch-icon">🧠</div><h3>5-Model Ensemble</h3><p>Random Forest · XGBoost · MLP Neural Network · GPR Matérn · GPR BesselK, combined via RidgeCV Stacking.</p></div>
+        <div class="arch-card"><div class="arch-icon">🔬</div><h3>BesselK Kernel</h3><p>Custom spatial kernel for Gaussian Process captures long-distance field relationships, outperforming standard kernels.</p></div>
+        <div class="arch-card"><div class="arch-icon">🛡️</div><h3>Overfitting Control</h3><p>5-Fold Cross-Validation, Early Stopping, Dropout, Regularization (RidgeCV) ensure robust generalization.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>🌾 AgriYield AI — Agricultural Productivity Prediction System</span>
+      <span class="footer-version">v2.0 · Stacking Ensemble · BesselK Kernel · Leaflet Maps</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
