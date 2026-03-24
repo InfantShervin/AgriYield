@@ -1,4 +1,4 @@
-# 🌾 AgriYield AI — Agricultural Productivity Prediction System
+# 🌾 AgriYield AI — Crop Yield Prediction System
 
 <div align="center">
 
@@ -92,7 +92,7 @@ $$k(x_i, x_j) = \frac{2^{1-\nu}}{\Gamma(\nu)} \left(\frac{\sqrt{2\nu} \cdot r}{\
 ## 📁 Project Structure
 
 ```
-Agricultural Productivity/
+AgriYield/
 │
 ├── backend/
 │   ├── main.py              # FastAPI application
@@ -135,8 +135,8 @@ Agricultural Productivity/
 ### Step 1 — Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/agricultural-productivity.git
-cd agricultural-productivity
+git clone https://github.com/InfantShervin/AgriYield.git
+cd AgriYield
 ```
 
 ### Step 2 — Install Python Dependencies
@@ -198,7 +198,7 @@ Returns API health status.
 
 **Response:**
 ```json
-{ "message": "Agricultural Productivity ML Backend is Running!" }
+{ "message": "AgriYield AI ML Backend is Running!" }
 ```
 
 ---

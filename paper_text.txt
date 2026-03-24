@@ -1,0 +1,127 @@
+--- PYMUPDF SUCCESS ---
+Advanced Multi-Dataset Crop Yield Prediction
+using Hybrid Spatial-Feature Modelling with
+BESSELK Algorithm
+Infant Shervin M J
+Department of Computing Technologies
+SRM Institute of Science and Technology
+Kattankulathur, 603203, Tamil Nadu, India
+Aditya Varna
+Department of Computing Technologies
+SRM Institute of Science and Technology
+Kattankulathur, 603203, Tamil Nadu, India
+Abstract—Accurate crop yield prediction is vital for agricul-
+tural planning, resource optimization, and food security. This
+research introduces a comprehensive machine learning frame-
+work that leverages ensemble learning techniques to enhance
+the accuracy of crop yield forecasting using multi-modal agricul-
+tural data. We integrated four diverse datasets—CropDataset-
+Enhanced, Smart Farming Crop Yield 2024, Daily Weather
+Data, and Average Precipitation Data—combined with advanced
+feature engineering using k-Nearest Neighbors for geospatial
+mapping. The proposed FusionNet-Ensemble architecture in-
+tegrates Random Forest for feature robustness, XGBoost for
+gradient-optimized predictions, Multi-Layer Perceptron for non-
+linear pattern capture, and Gaussian Process Regression with
+BesselK kernel for spatial correlation modeling. The stacking
+ensemble methodology achieves R² = 0.978 on test data, MAE =
+0.42 tons/hectare, and RMSE = 0.58 tons/hectare, outperforming
+individual models and existing methods like CNN-RNN hybrids
+and transformer-only approaches. Feature importance analysis
+reveals precipitation, soil pH, and temperature as primary yield
+drivers. The interpretable ensemble approach, combined with
+reproducible implementation in Kaggle environment with dual
+T4 GPUs, facilitates practical adoption in precision agriculture
+applications and supports farmer decision-making, crop plan-
+ning, and resource management.
+Index Terms—Crop yield prediction, BesselK algorithm, en-
+semble learning, Gaussian Process Regression, precision agricul-
+ture, multi-dataset integration, machine learning, spatial feature
+modeling.
+I. INTRODUCTION
+Global agricultural productivity faces critical challenges due
+to climate variability, soil degradation, and inefficient resource
+management. Traditional crop yield estimation methods based
+on manual observation and historical averages are prone to
+large prediction errors, resulting in suboptimal resource allo-
+cation and reduced food security. As the global population
+nears 10 billion by 2050, food production must increase by
+70% despite limited arable land and water resources. The in-
+tegration of Artificial Intelligence (AI) and Machine Learning
+(ML) introduces data-driven precision agriculture capable of
+optimizing productivity and sustainability.
+Conventional approaches often fail to capture complex,
+non-linear interactions among environmental and soil factors,
+while recent deep learning models such as CNNs offer limited
+interpretability and struggle with multi-source data fusion. To
+address these issues, this study proposes a hybrid machine
+learning framework for crop yield prediction featuring three
+key innovations: multi-modal data integration, hybrid kernel
+ensemble modeling, and systematic overfitting control.
+The
+proposed
+pipeline
+integrates
+four
+agricultural
+datasets—crop, weather, precipitation, and geospatial—using
+normalized
+feature
+engineering
+and
+k-Nearest
+Neighbor
+mapping to create a unified feature space. A stacking
+ensemble combines Random Forest, XGBoost, Multi-Layer
+Perceptron, and Gaussian Process Regression (with Mat´ern
+and
+BesselK
+kernels),
+leveraging
+the
+BesselK
+kernel’s
+strength in modeling long-range spatial correlations. Out-of-
+fold predictions are aggregated using a RidgeCV meta-learner
+to ensure robust generalization.
+Overfitting prevention techniques such as 5-fold cross-
+validation, early stopping, regularization, and ensemble di-
+versity further enhance performance stability. The system
+achieves superior predictive accuracy (R2 = 0.978), inter-
+pretability through feature importance analysis, and practical
+deployment feasibility via reproducible GPU-accelerated im-
+plementation.
+In summary, this work contributes by (1) integrating het-
+erogeneous datasets for holistic yield analysis, (2) introducing
+a hybrid stacking ensemble with advanced kernels, (3) en-
+hancing interpretability for agricultural decision-making, and
+(4) validating performance across real-world agricultural data.
+The remainder of this paper is organized as follows: Section
+II reviews related work, Section III details the methodology,
+Section IV presents results and discussion, and Section V
+concludes with key insights and future directions.
+II. LITERATURE REVIEW AND METHODOLOGY
+A. Related Work
+Machine learning has revolutionized agricultural analytics,
+enabling automatic prediction of complex crop behaviors
+with high accuracy. Particularly, Gaussian Process Regression
+and tree-based ensemble methods have proven effective in
+capturing non-linear relationships in environmental data. For
+instance, Wu et al. applied GPR with single-kernel approaches
+to model non-stationary crop yield distributions for insurance
+applications, achieving strong performance but lacking explo-
+ration of advanced kernel functions.
+However, ensemble learning remains a persistent gap in
+agricultural yield prediction. To address this, random forests
+and gradient boosting methods have gained prominence. Khaki
+et al. employed CNN-RNN hybrid frameworks capturing
+spatial-temporal factors in the U.S. Corn Belt, achieving im-
+pressive accuracy but suffering from interpretability limitations
+and high computational cost. Similarly, Yewle et al. fused
+remote-sensing imagery with weather data through deep en-
+sembles, demonstrating the power of multi-modal data fusion
+yet without comprehensive overfitting control mechanisms.
+In the context of spatial modeling, Islam et al. demon-
+strated the effectiveness of kernel methods for capturing
+geographical correlations in environmental datasets. Although
+effective in specific applications

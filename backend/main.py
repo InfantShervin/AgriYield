@@ -8,7 +8,7 @@ import os
 from ml_pipeline.models import create_ensemble_model
 from ml_pipeline.data_processor import AgriculturalDataProcessor
 
-app = FastAPI(title="Agricultural Productivity ML API", version="1.0")
+app = FastAPI(title="AgriYield AI ML API", version="1.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -55,7 +55,7 @@ else:
 
 @app.get("/")
 def read_root():
-    return {"message": "Agricultural Productivity ML Backend is Running!"}
+    return {"message": "AgriYield AI ML Backend is Running!"}
 
 @app.post("/api/predict", response_model=PredictionResponse)
 def predict_yield(request: PredictionRequest):
