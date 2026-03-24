@@ -168,26 +168,24 @@ This will:
 
 > ⚠️ **Note:** Due to GPR memory constraints, training is capped at 20,000 rows by default. This is statistically sufficient for high accuracy.
 
-### Step 5 — Start the Backend API
+### Step 5 — Start the Backend API (Terminal 1)
 
 ```bash
 python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
 ```
 
-The API will be available at: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+*   **API URL**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+*   **Interactive Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
-You can view the interactive API docs at: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-
-### Step 6 — Start the Frontend
-
-Open a **new terminal**:
+### Step 6 — Start the Frontend (Terminal 2)
 
 ```bash
 cd frontend
 python -m http.server 3000
 ```
 
-Open your browser and go to: **[http://127.0.0.1:3000](http://127.0.0.1:3000)**
+Once both servers are running, open your browser and go to:
+👉 **[http://127.0.0.1:3000](http://127.0.0.1:3000)**
 
 ---
 
