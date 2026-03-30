@@ -1,0 +1,26 @@
+{
+  "name": "agriyield",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InfantShervin/AgriYield.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/InfantShervin/AgriYield/issues"
+  },
+  "homepage": "https://github.com/InfantShervin/AgriYield#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@testing-library/dom": "^10.4.1",
+    "jsdom": "^29.0.1",
+    "vitest": "^4.1.2"
+  }
+}

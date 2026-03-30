@@ -1,0 +1,38 @@
+[project]
+name = "AgriYield"
+version = "0.1.0"
+description = "Crop Yield Prediction with BesselK Kernel & Stacking Ensemble"
+authors = [{ name = "Infant Shervin M J" }]
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests", "ml_pipeline/tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+norecursedirs = ["node_modules", "v_env", "venv"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+lint.select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "C",   # flake8-comprehensions
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "ASYNC", # flake8-async
+    "S",   # flake8-bandit (Security)
+]
+lint.ignore = ["S101"] # Ignore S101 (assert used) for testing
+
+[tool.mypy]
+ignore_missing_imports = true
+check_untyped_defs = true
+disallow_untyped_defs = false
+
+[tool.bandit]
+targets = ["backend", "ml_pipeline"]
+exclude_dirs = ["tests"]
+skips = ["B101"] # Ignore B101 (assert) as it is used in tests
