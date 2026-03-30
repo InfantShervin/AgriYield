@@ -200,34 +200,31 @@ Once both servers are running, open your browser and go to:
 
 ---
 
-## 🧪 Quality Assurance & Automation
-
-This project follows **Industry Standard** (e.g., Fiserv/Tech) QA practices.
-
-### 🛡️ 1. Security & Quality Scan
-We use **Bandit** for security vulnerability scanning and **Ruff** for lightning-fast linting and formatting.
+### 🚀 4. End-to-End (E2E) Selenium Testing
+We use **Selenium** with **WebDriver Manager** to simulate real user interactions on the browser. This ensures the frontend correctly communicates with the backend and displays predictions as expected.
 ```bash
-# Run security scan
-python -m bandit -r backend/ ml_pipeline/
-
-# Run linting
-python -m ruff check .
+# Run Selenium E2E tests
+python tests/selenium_test.py
 ```
 
-### 🧠 2. Backend & ML Unit Testing
-We use **Pytest** with **pytest-mock** to isolate dependencies (Supabase, ML Models) and ensure 100% deterministic logic.
-```bash
-python -m pytest
-```
+### 📈 5. CI/CD Pipeline
+Every push to `main` triggers a **GitHub Actions** workflow (`.github/workflows/ci.yml`) that executes:
+- **Security Scans**: Bandit (Python) & npm audit (Node)
+- **Code Quality**: Flake8 (Backend) & ESLint (Frontend)
+- **Unit Tests**: Pytest & Vitest
+- **E2E Integration**: Headless Selenium Suite
 
-### 🌐 3. End-to-End (E2E) Browser Testing
-We use **Playwright** to simulate a real user journey. It automatically starts both servers, fills the form, and verifies the prediction.
-```bash
-npx playwright test
-```
+---
 
-### 🚀 4. CI/CD Pipeline
-Every push to `main` triggers a GitHub Actions workflow that executes all the above checks before allowing the code to stay in the repository.
+## ✅ Verification Guide
+
+To verify that the system meets company standards (Fiserv/Enterprise Grade), follow these steps:
+
+1. **Static Analysis**: Run `flake8 backend/` and `npx eslint frontend/`. There should be 0 critical errors.
+2. **Security Check**: Run `bandit -r backend/`. It should return a "No issues identified" or "Low" only report (with documented risk acceptance for ML pickles).
+3. **Unit Tests**: Run `python -m pytest`. All 6 tests (Main API & DB Integration) must pass.
+4. **Automated E2E**: With both servers running, run `python tests/selenium_test.py`. It will perform a live prediction and verify the UI result.
+5. **CI/CD Dashboard**: Push to GitHub and check the **Actions** tab to see the green checkmark for the build pipeline.
 
 ---
 

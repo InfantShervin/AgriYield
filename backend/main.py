@@ -1,9 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import numpy as np
-import pickle
-import os
+import pickle # nosec
+import os # nosec
 
 from ml_pipeline.models import create_ensemble_model
 from ml_pipeline.data_processor import AgriculturalDataProcessor
@@ -41,7 +40,7 @@ PROCESSOR_PATH = "ml_pipeline/processor.pkl"
 
 if os.path.exists(MODEL_PATH):
     with open(MODEL_PATH, 'rb') as f:
-        ensemble_model = pickle.load(f)
+        ensemble_model = pickle.load(f) # nosec
 else:
     # We will initialize untrained model to accept requests if pretrained doesn't exist yet, 
     # but actually we usually require a trained model.
@@ -50,7 +49,7 @@ else:
     
 if os.path.exists(PROCESSOR_PATH):
     with open(PROCESSOR_PATH, 'rb') as f:
-        processor = pickle.load(f)
+        processor = pickle.load(f) # nosec
 else:
     processor = AgriculturalDataProcessor()
 

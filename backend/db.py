@@ -1,4 +1,3 @@
-import os
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime
 from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import datetime
@@ -42,21 +41,26 @@ def save_prediction(data: dict):
         return False
     try:
         db = SessionLocal()
-        record = PredictionRecord(
-            temperature=data.get('temperature'),
-            humidity=data.get('humidity'),
-            precipitation=data.get('precipitation'),
-            soil_ph=data.get('soil_ph'),
-            latitude=data.get('latitude'),
-            longitude=data.get('longitude'),
-            crop_type=data.get('crop_type', 'Unknown'),
-            predicted_yield=data.get('predicted_yield')
-        )
-        db.add(record)
-        db.commit()
-        db.refresh(record)
-        db.close()
-        return True
+        try:
+            record = PredictionRecord(
+                temperature=data.get('temperature'),
+                humidity=data.get('humidity'),
+                precipitation=data.get('precipitation'),
+                soil_ph=data.get('soil_ph'),
+                latitude=data.get('latitude'),
+                longitude=data.get('longitude'),
+                crop_type=data.get('crop_type', 'Unknown'),
+                predicted_yield=data.get('predicted_yield')
+            )
+            db.add(record)
+            db.commit()
+            db.refresh(record)
+            return True
+        except Exception as e:
+            print(f"Error saving to DB: {e}")
+            return False
+        finally:
+            db.close()
     except Exception as e:
-        print(f"Error saving to DB: {e}")
+        print(f"Error creating session: {e}")
         return False
