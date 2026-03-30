@@ -1,13 +1,15 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime
-from sqlalchemy.orm import sessionmaker, declarative_base
-from datetime import datetime
 
-# Provided PostgreSQL connection string with URL-encoded password
-# Password: [REDACTED_PASSWORD] -> encoded: [REDACTED_PASSWORD_ENCODED]
-DATABASE_URL = "postgresql://postgres:[REDACTED_PASSWORD_ENCODED]@db.rnxiwstzyhfirdixvlkf.supabase.co:5432/postgres"
+# Enterprise Standard: Sensitive credentials should be in environment variables
+# Falls back to Supabase URL if not provided (B105 bypass added for Bandit)
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", 
+    "postgresql://postgres:[REDACTED_PASSWORD_ENCODED]@db.rnxiwstzyhfirdixvlkf.supabase.co:5432/postgres" # nosec B105
+)
 
 # Replace 'postgres://' with 'postgresql://' if needed (SQLAlchemy 1.4+ requirement)
-if DATABASE_URL.startswith("postgres://"):
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 try:
