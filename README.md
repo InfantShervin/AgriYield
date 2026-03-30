@@ -218,7 +218,7 @@ Every push to `main` triggers a **GitHub Actions** workflow (`.github/workflows/
 
 ## ✅ Verification Guide
 
-To verify that the system meets company standards (Fiserv/Enterprise Grade), follow these steps:
+To verify that the system meets company standards (Enterprise Grade), follow these steps:
 
 1. **Static Analysis**: Run `flake8 backend/` and `npx eslint frontend/`. There should be 0 critical errors.
 2. **Security Check**: Run `bandit -r backend/`. It should return a "No issues identified" or "Low" only report (with documented risk acceptance for ML pickles).
