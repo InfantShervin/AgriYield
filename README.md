@@ -25,7 +25,6 @@
 - [Prerequisites](#-prerequisites)
 - [How to Run Locally](#-how-to-run-locally)
 - [API Reference](#-api-reference)
-- [Quality Assurance & Automation](#-quality-assurance--automation)
 - [Dataset Information](#-dataset-information)
 
 ---
@@ -116,16 +115,6 @@ AgriYield/
 │   ├── Fertilizer.csv
 │   └── ...
 │
-├── .github/
-│   └── workflows/ci.yml     # GitHub Actions Pipeline
-│
-├── tests/
-│   └── data/                # "Gold Sample" deterministic test data
-│
-├── requirements.txt         # Python dependencies (+ Dev tools)
-├── Makefile                 # Task orchestration (make test, make lint)
-├── pyproject.toml           # Unified tool configuration
-├── playwright.config.js     # E2E test configuration
 ├── .gitignore
 └── README.md
 ```
@@ -136,7 +125,6 @@ AgriYield/
 
 - **Python 3.10+** — [Download](https://python.org/downloads)
 - **Git** — [Download](https://git-scm.com)
-- **Node.js 18+** — [Download](https://nodejs.org) (for E2E testing)
 - A modern browser (Chrome, Firefox, Edge)
 
 ---
@@ -197,36 +185,6 @@ python -m http.server 3000
 
 Once both servers are running, open your browser and go to:
 👉 **[http://127.0.0.1:3000](http://127.0.0.1:3000)**
-
----
-
-### 🚀 4. End-to-End (E2E) Selenium Testing
-We use **Selenium** with **WebDriver Manager** to simulate real user interactions on the browser. This ensures the frontend correctly communicates with the backend and displays predictions as expected.
-```bash
-# Run Selenium E2E tests
-python tests/selenium_test.py
-```
-
-### 📈 5. CI/CD Pipeline
-Every push to `main` triggers a **GitHub Actions** workflow (`.github/workflows/ci.yml`) that executes:
-- **Security Scans**: Bandit (Python) & npm audit (Node)
-- **Code Quality**: Flake8 (Backend) & ESLint (Frontend)
-- **Unit Tests**: Pytest & Vitest
-- **E2E Integration**: Headless Selenium Suite
-
----
-
-## ✅ Verification Guide
-
-To verify that the system meets company standards (Enterprise Grade), follow these steps:
-
-1. **Static Analysis**: Run `flake8 backend/` and `npx eslint frontend/`. There should be 0 critical errors.
-2. **Security Check**: Run `bandit -r backend/`. It should return a "No issues identified" or "Low" only report (with documented risk acceptance for ML pickles).
-3. **Unit Tests**: Run `python -m pytest`. All 6 tests (Main API & DB Integration) must pass.
-4. **Automated E2E**: With both servers running, run `python tests/selenium_test.py`. It will perform a live prediction and verify the UI result.
-5. **CI/CD Dashboard**: Push to GitHub and check the **Actions** tab to see the green checkmark for the build pipeline.
-
----
 
 ---
 
