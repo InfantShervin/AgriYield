@@ -25,6 +25,7 @@
 - [Prerequisites](#-prerequisites)
 - [How to Run Locally](#-how-to-run-locally)
 - [API Reference](#-api-reference)
+- [Quality Assurance & Automation](#-quality-assurance--automation)
 - [Dataset Information](#-dataset-information)
 
 ---
@@ -115,7 +116,16 @@ AgriYield/
 │   ├── Fertilizer.csv
 │   └── ...
 │
-├── requirements.txt         # Python dependencies
+├── .github/
+│   └── workflows/ci.yml     # GitHub Actions Pipeline
+│
+├── tests/
+│   └── data/                # "Gold Sample" deterministic test data
+│
+├── requirements.txt         # Python dependencies (+ Dev tools)
+├── Makefile                 # Task orchestration (make test, make lint)
+├── pyproject.toml           # Unified tool configuration
+├── playwright.config.js     # E2E test configuration
 ├── .gitignore
 └── README.md
 ```
@@ -126,6 +136,7 @@ AgriYield/
 
 - **Python 3.10+** — [Download](https://python.org/downloads)
 - **Git** — [Download](https://git-scm.com)
+- **Node.js 18+** — [Download](https://nodejs.org) (for E2E testing)
 - A modern browser (Chrome, Firefox, Edge)
 
 ---
@@ -186,6 +197,39 @@ python -m http.server 3000
 
 Once both servers are running, open your browser and go to:
 👉 **[http://127.0.0.1:3000](http://127.0.0.1:3000)**
+
+---
+
+## 🧪 Quality Assurance & Automation
+
+This project follows **Industry Standard** (e.g., Fiserv/Tech) QA practices.
+
+### 🛡️ 1. Security & Quality Scan
+We use **Bandit** for security vulnerability scanning and **Ruff** for lightning-fast linting and formatting.
+```bash
+# Run security scan
+python -m bandit -r backend/ ml_pipeline/
+
+# Run linting
+python -m ruff check .
+```
+
+### 🧠 2. Backend & ML Unit Testing
+We use **Pytest** with **pytest-mock** to isolate dependencies (Supabase, ML Models) and ensure 100% deterministic logic.
+```bash
+python -m pytest
+```
+
+### 🌐 3. End-to-End (E2E) Browser Testing
+We use **Playwright** to simulate a real user journey. It automatically starts both servers, fills the form, and verifies the prediction.
+```bash
+npx playwright test
+```
+
+### 🚀 4. CI/CD Pipeline
+Every push to `main` triggers a GitHub Actions workflow that executes all the above checks before allowing the code to stay in the repository.
+
+---
 
 ---
 

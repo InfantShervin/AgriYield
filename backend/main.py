@@ -7,6 +7,7 @@ import os
 
 from ml_pipeline.models import create_ensemble_model
 from ml_pipeline.data_processor import AgriculturalDataProcessor
+from backend import db # Imported for persistence
 
 app = FastAPI(title="AgriYield AI ML API", version="1.0")
 
@@ -60,7 +61,7 @@ def read_root():
 @app.post("/api/predict", response_model=PredictionResponse)
 def predict_yield(request: PredictionRequest):
     try:
-        data_dict = request.dict()
+        data_dict = request.model_dump() # Updated from .dict() for Pydantic V2 compatibility
         
         # Step 1: Preprocessing for single inference
         features = processor.preprocess_request(data_dict)
@@ -68,6 +69,11 @@ def predict_yield(request: PredictionRequest):
         # Real prediction
         yield_prediction = ensemble_model.predict(features)[0]
         
+        # Step 2: Persist to database (Audit logging)
+        db_payload = data_dict.copy()
+        db_payload['predicted_yield'] = float(yield_prediction)
+        db.save_prediction(db_payload)
+
         return PredictionResponse(
             predicted_yield=round(float(yield_prediction), 2),
             confidence=0.978, # Stacking ensemble paper benchmark
